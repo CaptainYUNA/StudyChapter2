@@ -288,7 +288,7 @@ namespace StudyChapter2
         public static void AreaOfCircle()
         {
             //원의 반지름이 1~10cm까지 변할 때 원의 면적 구하기
-            CalculateAreaOfCircle(10);
+            CalculateAreaOfCircle(9);
         }
 
         private static void CalculateAreaOfCircle(double r)
