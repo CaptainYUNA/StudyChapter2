@@ -285,10 +285,15 @@ namespace StudyChapter2
             Console.WriteLine($"{value}의 {n}승의 값: {result:N0}");
         }
 
-        public static void AreaOfCircle(double r)
+        public static void AreaOfCircle()
         {
             //원의 반지름이 1~10cm까지 변할 때 원의 면적 구하기
-            for (int i = 1; i <= r; i++)
+            CalculateAreaOfCircle(10);
+        }
+
+        private static void CalculateAreaOfCircle(double r)
+        {
+            for (int i = 0; i < r; i++)
             {
                 var area = Math.PI * i * i;
 
