@@ -59,20 +59,30 @@ namespace StudyChapter2
             var tMonth = today.Month;
             var tday = today.Day;
 
-            int sum = 1 + day;
+            int sum = 1;
 
-            //1992년의 5월 ~ 12월 31일
-            var sMonth = CalculateMonth(month);
-            sum += sMonth; //기대 값: 304일 (설정한 일수 + 설정한 월의 다음 월부터 12월까지의 일수)
+            //set 일자(day)를 더함
+            sum += day;
 
-            //1992년 ~ 2022년의 차이는 30년, 1월 ~ 12월의 일자 합계 * 차이 값(30)
+            //1992년의 5월 ~ 12월 31일 일자 계산
+            var sMonth = CalculateMonth(month + 1);
+            sum += sMonth; //설정한 월의 다음 월부터 12월까지의 일수
+
+            //설정한 년도의 월, 일은 이미 계산함. year에 +1 해 줌
+            //1993년 ~ 2022년의 차이는 29년, 365 * 차이 값(29)을 sum에 더해줌
             var cYear = tYear - (year + 1);
-            sum = cYear * allDays;
+            sum += cYear * allDays;
 
             //올해의 월, 일 계산
-            var cMonth = CalculateMonth(tMonth);
-            sum += cMonth;
-            sum += tday;
+            if (tMonth == 1)
+            {
+                sum += tday;
+            }
+            else
+            {
+                var cMonth = CalculateMonth(tMonth);
+                sum += cMonth;
+            }
 
             var leadYearCount = 0;
 
@@ -94,7 +104,7 @@ namespace StudyChapter2
 
         private static int CalculateMonth(int month)
         {
-            var sum = 1;
+            var sum = 0;
 
             for (int i = month; i <= days.Count; i++)
             {
