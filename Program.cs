@@ -7,17 +7,17 @@ namespace StudyChapter2
         static void Main(string[] args)
         {
             //2차원 배열 Test
-            int[][] testArray = new int[2][];
+            //int[][] testArray = new int[2][];
 
-            while (true)
-            {
-                var line = Console.ReadLine();
-                if (int.TryParse(line, out var input))
-                {
-                    Console.WriteLine(Study.IsLeapYear(input) ? "윤년" : "평년");
-                }
-                else { Console.WriteLine("다시입력"); }
-            }
+            //while (true)
+            //{
+            //    var line = Console.ReadLine();
+            //    if (int.TryParse(line, out var input))
+            //    {
+            //        Console.WriteLine(Study.IsLeapYear(input) ? "윤년" : "평년");
+            //    }
+            //    else { Console.WriteLine("다시입력"); }
+            //}
 
             //var study = new Study();
 
@@ -47,7 +47,13 @@ namespace StudyChapter2
             //Study.Power(2, 20); //Cahpter 77
             //Study.AreaOfCircle(10);
 
-            Study.CalculateAge(1992, 8, 1);
+            //Study.CalculateAge(1992, 4, 27);
+            var powerResult = StudyRecurison.RecurisonPower(5, 5);
+            Console.WriteLine($"Result of Recurison Power Method: {powerResult}");
+
+            var factorialResult = StudyRecurison.RecurisonFactorial(10);
+            Console.WriteLine($"Result of Recurison Power Method: {factorialResult}");
+
         }
 
         private static void ExampleStaticMethod(int[][] array)

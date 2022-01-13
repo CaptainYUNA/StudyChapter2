@@ -4,7 +4,7 @@ using System.Text;
 
 namespace StudyChapter2
 {
-    static class Study
+    public static class Study
     {
         private static Dictionary<int, int> days = new Dictionary<int, int>();
 
@@ -42,48 +42,78 @@ namespace StudyChapter2
         }
         public static bool IsLeapYear(int year)
         {
-            return (year % 4 == 0) && ((year % 100 != 0) || (year % 400 == 0));
+            return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
         }
 
         public static void CalculateAge(int year, int month, int day)
         {
             GenerateMonth();
 
-            //1월부터 12월까지 모든 날짜 수의 합
-            var allDays = CalculateAllDays();
+            //1년 = 365일
+            const int allDays = 365;
 
+            //1992-4-27
+            //2022-1-13
             var today = DateTime.Today;
             var tYear = today.Year;
             var tMonth = today.Month;
             var tday = today.Day;
 
-            var cYear = tYear - year;
-
             int sum = 0;
 
-            //8월~12월
-            for (int i = month; i <= days.Count; i++)
+            //set 일자(day)를 더함
+            days.TryGetValue(month, out var tempDay);
+            sum += (tempDay - day);
+
+            //1992년의 5월 ~ 12월 31일 일자 계산
+            var sMonth = CalculateMonth(month + 1);
+            sum += sMonth; //설정한 월의 다음 월부터 12월까지의 일수, 기대값: 249 (O)
+
+
+            //설정한 년도의 월, 일은 이미 계산함. year에 +1 해 줌
+            //1993년 ~ 2022년의 차이는 29년, 365 * 차이 값(29)을 sum에 더해줌
+            var cYear = (tYear - (year + 1));
+            sum += (cYear * allDays);
+
+            //올해의 월, 일 계산
+            if (tMonth == 1)
             {
-                days.TryGetValue(month, out var value);
-                sum += value;
+                sum += tday;
+            }
+            else
+            {
+                var cMonth = CalculateMonth(tMonth);
+                sum += cMonth;
             }
 
-            for (int i = year; i < tYear; i++)
+            var leadYearCount = 0;
+
+            //1992년 ~ 2022년에서 윤년이 있을 때마다 sum 증가
+            for (int i = year; i <= tYear; i++)
             {
                 if (IsLeapYear(i))
                 {
-                    sum++;
+                    Console.WriteLine($"{i} ");
+                    leadYearCount++;
                 }
             }
+
+            Console.WriteLine($"윤년 개수: {leadYearCount}");
+
+            sum += leadYearCount;
+
+            Console.WriteLine($"계산 값: {sum} 일");
         }
 
-        private static int CalculateAllDays()
+        private static int CalculateMonth(int month)
         {
-            int sum = 0;
+            var sum = 0;
 
-            foreach (var day in days.Values)
+            for (int i = month; i <= days.Count; i++)
             {
-                sum += day;
+                days.TryGetValue(i, out int value);
+
+                sum += value;
             }
 
             return sum;
@@ -93,22 +123,31 @@ namespace StudyChapter2
         {
             for (int i = 1; i <= 12; i++)
             {
-                if (i % 2 == 1)
+                if (i <= 7)
                 {
-                    days.Add(i, 31);
-                }
-                else
-                {
-                    if (i == 2)
-                    {
-                        days.Add(i, 28);
-                    }
-                    else if (i == 8)
+                    if (i % 2 == 1)
                     {
                         days.Add(i, 31);
                     }
-
-                    days.Add(i, 30);
+                    else if (i == 2)
+                    {
+                        days.Add(i, 28);
+                    }
+                    else
+                    {
+                        days.Add(i, 30);
+                    }
+                }
+                else
+                {
+                    if (i % 2 == 0)
+                    {
+                        days.Add(i, 31);
+                    }
+                    else
+                    {
+                        days.Add(i, 30);
+                    }
                 }
             }
         }
@@ -162,6 +201,7 @@ namespace StudyChapter2
             return true;
         }
 
+        //condition: 2를 제외한 모든 짝수는 소수가 아님
         public static void FindPrimeNumber(int range)
         {
             var number = 2;
@@ -288,7 +328,7 @@ namespace StudyChapter2
         public static void AreaOfCircle()
         {
             //원의 반지름이 1~10cm까지 변할 때 원의 면적 구하기
-            CalculateAreaOfCircle(9);
+            CalculateAreaOfCircle(10);
         }
 
         private static void CalculateAreaOfCircle(double r)
