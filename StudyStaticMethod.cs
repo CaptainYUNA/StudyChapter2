@@ -42,7 +42,7 @@ namespace StudyChapter2
         }
         public static bool IsLeapYear(int year)
         {
-            return (year % 4 == 0) && ((year % 100 != 0) || (year % 400 == 0));
+            return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
         }
 
         public static void CalculateAge(int year, int month, int day)
@@ -59,19 +59,21 @@ namespace StudyChapter2
             var tMonth = today.Month;
             var tday = today.Day;
 
-            int sum = 1;
+            int sum = 0;
 
             //set 일자(day)를 더함
-            sum += day;
+            days.TryGetValue(month, out var tempDay);
+            sum += (tempDay - day);
 
             //1992년의 5월 ~ 12월 31일 일자 계산
             var sMonth = CalculateMonth(month + 1);
-            sum += sMonth; //설정한 월의 다음 월부터 12월까지의 일수
+            sum += sMonth; //설정한 월의 다음 월부터 12월까지의 일수, 기대값: 249 (O)
+
 
             //설정한 년도의 월, 일은 이미 계산함. year에 +1 해 줌
             //1993년 ~ 2022년의 차이는 29년, 365 * 차이 값(29)을 sum에 더해줌
-            var cYear = tYear - (year + 1);
-            sum += cYear * allDays;
+            var cYear = (tYear - (year + 1));
+            sum += (cYear * allDays);
 
             //올해의 월, 일 계산
             if (tMonth == 1)
@@ -87,10 +89,11 @@ namespace StudyChapter2
             var leadYearCount = 0;
 
             //1992년 ~ 2022년에서 윤년이 있을 때마다 sum 증가
-            for (int i = year; i < tYear; i++)
+            for (int i = year; i <= tYear; i++)
             {
                 if (IsLeapYear(i))
                 {
+                    Console.WriteLine($"{i} ");
                     leadYearCount++;
                 }
             }
@@ -198,6 +201,7 @@ namespace StudyChapter2
             return true;
         }
 
+        //condition: 2를 제외한 모든 짝수는 소수가 아님
         public static void FindPrimeNumber(int range)
         {
             var number = 2;
@@ -324,7 +328,7 @@ namespace StudyChapter2
         public static void AreaOfCircle()
         {
             //원의 반지름이 1~10cm까지 변할 때 원의 면적 구하기
-            CalculateAreaOfCircle(9);
+            CalculateAreaOfCircle(10);
         }
 
         private static void CalculateAreaOfCircle(double r)

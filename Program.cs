@@ -47,7 +47,13 @@ namespace StudyChapter2
             //Study.Power(2, 20); //Cahpter 77
             //Study.AreaOfCircle(10);
 
-            Study.CalculateAge(1992, 4, 27);
+            //Study.CalculateAge(1992, 4, 27);
+            var powerResult = StudyRecurison.RecurisonPower(5, 5);
+            Console.WriteLine($"Result of Recurison Power Method: {powerResult}");
+
+            var factorialResult = StudyRecurison.RecurisonFactorial(10);
+            Console.WriteLine($"Result of Recurison Power Method: {factorialResult}");
+
         }
 
         private static void ExampleStaticMethod(int[][] array)
