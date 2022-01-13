@@ -4,7 +4,7 @@ using System.Text;
 
 namespace StudyChapter2
 {
-    static class Study
+    public static class Study
     {
         private static Dictionary<int, int> days = new Dictionary<int, int>();
 
@@ -49,41 +49,58 @@ namespace StudyChapter2
         {
             GenerateMonth();
 
-            //1월부터 12월까지 모든 날짜 수의 합
-            var allDays = CalculateAllDays();
+            //1년 = 365일
+            const int allDays = 365;
 
+            //1992-4-27
+            //2022-1-13
             var today = DateTime.Today;
             var tYear = today.Year;
             var tMonth = today.Month;
             var tday = today.Day;
 
-            var cYear = tYear - year;
+            int sum = 1 + day;
 
-            int sum = 0;
+            //1992년의 5월 ~ 12월 31일
+            var sMonth = CalculateMonth(month);
+            sum += sMonth; //기대 값: 304일 (설정한 일수 + 설정한 월의 다음 월부터 12월까지의 일수)
 
-            //8월~12월
-            for (int i = month; i <= days.Count; i++)
-            {
-                days.TryGetValue(month, out var value);
-                sum += value;
-            }
+            //1992년 ~ 2022년의 차이는 30년, 1월 ~ 12월의 일자 합계 * 차이 값(30)
+            var cYear = tYear - (year + 1);
+            sum = cYear * allDays;
 
+            //올해의 월, 일 계산
+            var cMonth = CalculateMonth(tMonth);
+            sum += cMonth;
+            sum += tday;
+
+            var leadYearCount = 0;
+
+            //1992년 ~ 2022년에서 윤년이 있을 때마다 sum 증가
             for (int i = year; i < tYear; i++)
             {
                 if (IsLeapYear(i))
                 {
-                    sum++;
+                    leadYearCount++;
                 }
             }
+
+            Console.WriteLine($"윤년 개수: {leadYearCount}");
+
+            sum += leadYearCount;
+
+            Console.WriteLine($"계산 값: {sum} 일");
         }
 
-        private static int CalculateAllDays()
+        private static int CalculateMonth(int month)
         {
-            int sum = 0;
+            var sum = 1;
 
-            foreach (var day in days.Values)
+            for (int i = month; i <= days.Count; i++)
             {
-                sum += day;
+                days.TryGetValue(i, out int value);
+
+                sum += value;
             }
 
             return sum;
@@ -93,22 +110,31 @@ namespace StudyChapter2
         {
             for (int i = 1; i <= 12; i++)
             {
-                if (i % 2 == 1)
+                if (i <= 7)
                 {
-                    days.Add(i, 31);
-                }
-                else
-                {
-                    if (i == 2)
-                    {
-                        days.Add(i, 28);
-                    }
-                    else if (i == 8)
+                    if (i % 2 == 1)
                     {
                         days.Add(i, 31);
                     }
-
-                    days.Add(i, 30);
+                    else if (i == 2)
+                    {
+                        days.Add(i, 28);
+                    }
+                    else
+                    {
+                        days.Add(i, 30);
+                    }
+                }
+                else
+                {
+                    if (i % 2 == 0)
+                    {
+                        days.Add(i, 31);
+                    }
+                    else
+                    {
+                        days.Add(i, 30);
+                    }
                 }
             }
         }
