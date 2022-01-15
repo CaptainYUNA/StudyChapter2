@@ -29,5 +29,37 @@ namespace StudyChapter2
                 return x * RecurisonPower(x, y - 1);
             }
         }
+
+        public static double RecurisonSumInverseNumber(double n)
+        {
+            if (n == 1)
+            {
+                return 1;
+            }
+            else
+            {
+                return 1.0 / n + RecurisonSumInverseNumber(n - 1);
+            }
+        }
+
+        static int count = 0;
+
+        public static void RecurisonTowerOfHanoi(int n, char from, char to, char by)
+        {
+            if (n == 1)
+            {
+                count++;
+
+                Console.WriteLine($"[{from} 기둥] -> [{by} 기둥]");
+            }
+            else
+            {
+                count++;
+
+                RecurisonTowerOfHanoi(n - 1, from, by, to);
+                Console.WriteLine($"[{from} 기둥] -> [{to} 기둥]");
+                RecurisonTowerOfHanoi(n - 1, by, to, from);
+            }
+        }
     }
 }
