@@ -1,12 +1,15 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace StudyChapter2
 {
+    [TestClass]
     public static class Study
     {
-        private static Dictionary<int, int> days = new Dictionary<int, int>();
+        private static Dictionary<int, int> _days = new Dictionary<int, int>();
 
         public static int CompareValue(int value1, int value2, int value3)
         {
@@ -49,47 +52,52 @@ namespace StudyChapter2
         {
             GenerateMonth();
 
-            //1년 = 365일
-            const int allDays = 365;
-
             //1992-4-27
             //2022-1-13
             var today = DateTime.Today;
-            var tYear = today.Year;
-            var tMonth = today.Month;
-            var tday = today.Day;
+            CalculateAge(new DateTime(year, month, day), today);
+        }
+        [TestMethod]
+
+        public static void TestCalculateAge(DateTime from, DateTime to)
+        {
+            Console.WriteLine($"CalculateAge:{CalculateAge(from, to)}, TimeSpan.TotalDays:{(to - from).TotalDays}");
+
+        }
+
+
+        public static int CalculateAge(DateTime from, DateTime to)
+        {
+            var year = from.Year;
+            var month = from.Month;
+            var day = from.Day;
+
+            var tYear = to.Year;
+            var tMonth = to.Month;
+            var tday = to.Day;
+
+            //1년 = 365일
+            const int allDays = 365;
 
             int sum = 0;
 
-            //set 일자(day)를 더함
-            days.TryGetValue(month, out var tempDay);
-            sum += (tempDay - day);
+            //from 일자(day)를 더함
+            sum += day;
 
-            //1992년의 5월 ~ 12월 31일 일자 계산
-            var sMonth = CalculateMonth(month + 1);
-            sum += sMonth; //설정한 월의 다음 월부터 12월까지의 일수, 기대값: 249 (O)
+            //1992년의 2월 ~ 12월 31일 일자 계산
+            var sMonth = CalculateMonth(month + 1, year);
+            sum += sMonth; //설정한 월의 다음 월부터 12월까지의 일수, 윤년 체크
 
 
             //설정한 년도의 월, 일은 이미 계산함. year에 +1 해 줌
-            //1993년 ~ 2022년의 차이는 29년, 365 * 차이 값(29)을 sum에 더해줌
+            //1993년 ~ 2020년의 차이는 27년, 365 * 27을 sum에 더해줌
             var cYear = (tYear - (year + 1));
             sum += (cYear * allDays);
 
-            //올해의 월, 일 계산
-            if (tMonth == 1)
-            {
-                sum += tday;
-            }
-            else
-            {
-                var cMonth = CalculateMonth(tMonth);
-                sum += cMonth;
-            }
+            var leadYearCount = IsLeapYear(tYear) ? 1 : 0;
 
-            var leadYearCount = 0;
-
-            //1992년 ~ 2022년에서 윤년이 있을 때마다 sum 증가
-            for (int i = year; i <= tYear; i++)
+            // 1993년 ~2021년에서 윤년이 있을 때마다 sum 증가
+            for (int i = year; i < tYear; i++)
             {
                 if (IsLeapYear(i))
                 {
@@ -102,18 +110,37 @@ namespace StudyChapter2
 
             sum += leadYearCount;
 
+            //올해의 월, 일 계산
+            if (tMonth == 1)
+            {
+                sum += tday;
+            }
+            else
+            {
+                var cMonth = CalculateMonth(tMonth, tYear);
+                sum += cMonth;
+            }
+
+
             Console.WriteLine($"계산 값: {sum} 일");
+
+            return sum;
         }
 
-        private static int CalculateMonth(int month)
+        private static int CalculateMonth(int month, int year)
         {
-            var sum = 0;
+            int sum = 0;
 
-            for (int i = month; i <= days.Count; i++)
+            if (month == 2 && IsLeapYear(year))
             {
-                days.TryGetValue(i, out int value);
+                sum++;
+            }
 
-                sum += value;
+            for (int i = month; i <= _days.Count; i++)
+            {
+                _days.TryGetValue(i, out int value);
+                sum = (sum + value) + 1;
+
             }
 
             return sum;
@@ -127,26 +154,26 @@ namespace StudyChapter2
                 {
                     if (i % 2 == 1)
                     {
-                        days.Add(i, 31);
+                        _days.Add(i, 31);
                     }
                     else if (i == 2)
                     {
-                        days.Add(i, 28);
+                        _days.Add(i, 28);
                     }
                     else
                     {
-                        days.Add(i, 30);
+                        _days.Add(i, 30);
                     }
                 }
                 else
                 {
                     if (i % 2 == 0)
                     {
-                        days.Add(i, 31);
+                        _days.Add(i, 31);
                     }
                     else
                     {
-                        days.Add(i, 30);
+                        _days.Add(i, 30);
                     }
                 }
             }
