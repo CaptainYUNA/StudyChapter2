@@ -1,8 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace StudyChapter2
 {
@@ -57,17 +57,18 @@ namespace StudyChapter2
             var today = DateTime.Today;
             CalculateAge(new DateTime(year, month, day), today);
         }
-        [TestMethod]
 
+        [TestMethod]
         public static void TestCalculateAge(DateTime from, DateTime to)
         {
-            Console.WriteLine($"CalculateAge:{CalculateAge(from, to)}, TimeSpan.TotalDays:{(to - from).TotalDays}");
-
+            Console.WriteLine($"CalculateAge: {CalculateAge(from, to)}, TimeSpan.TotalDays: {(to - from).TotalDays}");
         }
 
 
         public static int CalculateAge(DateTime from, DateTime to)
         {
+            GenerateMonth();
+
             var year = from.Year;
             var month = from.Month;
             var day = from.Day;
@@ -79,25 +80,28 @@ namespace StudyChapter2
             //1년 = 365일
             const int allDays = 365;
 
-            int sum = 0;
+            int sum = 1;
 
             //from 일자(day)를 더함
-            sum += day;
+            if (tday > 1)
+            {
+                _days.TryGetValue(month, out int value);
+                sum += value - day;
+            }
 
             //1992년의 2월 ~ 12월 31일 일자 계산
-            var sMonth = CalculateMonth(month + 1, year);
-            sum += sMonth; //설정한 월의 다음 월부터 12월까지의 일수, 윤년 체크
-
+            var sDays = CalculateDays(month + 1);
+            sum += sDays; //설정한 월의 다음 월부터 12월까지의 일수, 윤년 체크
 
             //설정한 년도의 월, 일은 이미 계산함. year에 +1 해 줌
-            //1993년 ~ 2020년의 차이는 27년, 365 * 27을 sum에 더해줌
-            var cYear = (tYear - (year + 1));
+            //1993년 ~ 2022년의 차이는 29년, 365 * 29을 sum에 더해줌
+            var cYear = tYear - (year + 1);
             sum += (cYear * allDays);
 
-            var leadYearCount = IsLeapYear(tYear) ? 1 : 0;
+            var leadYearCount = 0;
 
             // 1993년 ~2021년에서 윤년이 있을 때마다 sum 증가
-            for (int i = year; i < tYear; i++)
+            for (int i = year + 1; i < tYear; i++)
             {
                 if (IsLeapYear(i))
                 {
@@ -117,7 +121,7 @@ namespace StudyChapter2
             }
             else
             {
-                var cMonth = CalculateMonth(tMonth, tYear);
+                var cMonth = CalculateDays(tMonth);
                 sum += cMonth;
             }
 
@@ -127,19 +131,14 @@ namespace StudyChapter2
             return sum;
         }
 
-        private static int CalculateMonth(int month, int year)
+        private static int CalculateDays(int month)
         {
-            int sum = 0;
-
-            if (month == 2 && IsLeapYear(year))
-            {
-                sum++;
-            }
+            int sum = 1;
 
             for (int i = month; i <= _days.Count; i++)
             {
                 _days.TryGetValue(i, out int value);
-                sum = (sum + value) + 1;
+                sum += value;
 
             }
 

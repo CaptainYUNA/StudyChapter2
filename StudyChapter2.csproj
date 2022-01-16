@@ -9,4 +9,9 @@
     <None Remove="StudyMethod.cs~RF451f8d86.TMP" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.8" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.8" />
+  </ItemGroup>
+
 </Project>

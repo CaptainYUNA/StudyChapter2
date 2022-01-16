@@ -33,7 +33,7 @@ namespace StudyChapter2
             }
         }
 
-        private static int[] GenerateArray(int size, int min, int max, int sid = 0)
+        public static int[] GenerateArray(int size, int min, int max, int sid = 0)
         {
             var random = new Random();
 
@@ -46,8 +46,6 @@ namespace StudyChapter2
 
             return array;
         }
-
-
 
         public static void BinarySearchSearchChapter63()
         {
@@ -118,7 +116,7 @@ namespace StudyChapter2
             PrintArray(bubbleArray, "정렬된 배열: ");
         }
 
-        private static void PrintArray(int[] array, string message)
+        public static void PrintArray(int[] array, string message)
         {
             Console.Write($"{message}");
 

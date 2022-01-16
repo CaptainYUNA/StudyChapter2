@@ -1,7 +1,10 @@
 ﻿using System;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace StudyChapter2
 {
+    [TestClass]
     class Program
     {
         static void Main(string[] args)
@@ -25,7 +28,12 @@ namespace StudyChapter2
             //StudySort.LinearSearchRandom(); // 2022-01-05 Linear Search19
 
             //StudySort.LinearSearchChapter63(); // 2022-01-06 Linear Search (Find Index, search count)
+            //var watch = System.Diagnostics.Stopwatch.StartNew();
             //StudySort.BinarySearchSearchChapter63(); // 2022-01-06 Binary Search (Find Index, search count)
+            //watch.Stop();
+
+            //var elapsedMs = watch.ElapsedMilliseconds;
+            //Console.WriteLine($"Normal Binary Search Elapsed Ms: {elapsedMs}");
 
             //StudySort.BubbleSotringChapter64(); //2022-01-07 Bubble Sotring
 
@@ -47,18 +55,25 @@ namespace StudyChapter2
             //Study.Power(2, 20); //Cahpter 77
             //Study.AreaOfCircle(10);
 
-            Study.CalculateAge(1992, 4, 27);
-
-
-            Study.TestCalculateAge(new DateTime(1992, 4, 27), DateTime.Today);
+            //TODO::
+            //Study.CalculateAge(1992, 4, 27);
+            //Study.TestCalculateAge(new DateTime(1992, 4, 27), DateTime.Today);
             //Study.TestCalculateAge(new DateTime(1992, 4, 27), DateTime.Today.AddMonths(1));
+
             //var powerResult = StudyRecurison.RecurisonPower(5, 5);
             //Console.WriteLine($"Result of Recurison Power Method: {powerResult}");
 
-            var factorialResult = StudyRecurison.RecurisonFactorial(10);
-            Console.WriteLine($"Result of Recurison Power Method: {factorialResult}");
+            //var factorialResult = StudyRecurison.RecurisonFactorial(10);
+            //Console.WriteLine($"Result of Recurison Power Method: {factorialResult}");
 
-            StudyRecurison.RecurisonTowerOfHanoi(4, 'A', 'B', 'C');
+            //watch = System.Diagnostics.Stopwatch.StartNew();
+            //StudyRecurison.RecurisonBinarySearch();
+            //watch.Stop();
+
+            //elapsedMs = watch.ElapsedMilliseconds;
+            //Console.WriteLine($"Recurion Binary Search Elapsed Ms: {elapsedMs}");
+
+            Study.TestCalculateAge(new DateTime(1992, 1, 27), DateTime.Today);
         }
 
         private static void ExampleStaticMethod(int[][] array)
@@ -68,6 +83,3 @@ namespace StudyChapter2
         }
     }
 }
-
-
-
