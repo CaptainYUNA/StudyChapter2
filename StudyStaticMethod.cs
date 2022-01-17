@@ -9,6 +9,11 @@ namespace StudyChapter2
     [TestClass]
     public static class Study
     {
+        static Study()
+        {
+            GenerateMonth();
+        }
+
         private static Dictionary<int, int> _days = new Dictionary<int, int>();
 
         public static int CompareValue(int value1, int value2, int value3)
@@ -67,7 +72,6 @@ namespace StudyChapter2
 
         public static int CalculateAge(DateTime from, DateTime to)
         {
-            GenerateMonth();
 
             var year = from.Year;
             var month = from.Month;
@@ -83,24 +87,24 @@ namespace StudyChapter2
             int sum = 1;
 
             //from 일자(day)를 더함
-            if (tday > 1)
+            if (day > 1)
             {
                 _days.TryGetValue(month, out int value);
                 sum += value - day;
             }
 
-            //1992년의 2월 ~ 12월 31일 일자 계산
-            var sDays = CalculateDays(month + 1);
-            sum += sDays; //설정한 월의 다음 월부터 12월까지의 일수, 윤년 체크
+            //from년의 다음 달 ~ 12월 31일 일자 계산
+            var sDays = CalculateDays(month + 1, 1);
+            sum += sDays; //설정한 월의 다음 월부터 12월까지의 일수
 
             //설정한 년도의 월, 일은 이미 계산함. year에 +1 해 줌
-            //1993년 ~ 2022년의 차이는 29년, 365 * 29을 sum에 더해줌
+            //from ~ to의 차이는 구해서 *365 값을 sum에 더해줌
             var cYear = tYear - (year + 1);
             sum += (cYear * allDays);
 
             var leadYearCount = 0;
 
-            // 1993년 ~2021년에서 윤년이 있을 때마다 sum 증가
+            // from ~ to년에서 윤년이 있을 때마다 sum 증가
             for (int i = year + 1; i < tYear; i++)
             {
                 if (IsLeapYear(i))
@@ -115,14 +119,26 @@ namespace StudyChapter2
             sum += leadYearCount;
 
             //올해의 월, 일 계산
-            if (tMonth == 1)
+            //올해가 윤년이라면
+            if (IsLeapYear(tYear))
             {
-                sum += tday;
+                if (tMonth >= 2)
+                {
+                    var days = CalculateDays(tMonth, tday);
+                    sum += (days + 1);
+                }
+                else
+                {
+                    sum += tday;
+                }
+
             }
+            //윤년이 아니라면
             else
             {
-                var cMonth = CalculateDays(tMonth);
+                var cMonth = CalculateDays(tMonth, tday);
                 sum += cMonth;
+
             }
 
 
@@ -131,15 +147,23 @@ namespace StudyChapter2
             return sum;
         }
 
-        private static int CalculateDays(int month)
+        private static int CalculateDays(int month, int day = 1)
         {
-            int sum = 1;
+            var sum = 1;
 
-            for (int i = month; i <= _days.Count; i++)
+            if (month >= 2)
             {
-                _days.TryGetValue(i, out int value);
-                sum += value;
-
+                //2월 이상일 때
+                for (int i = 2; i <= month; i++)
+                {
+                    _days.TryGetValue(i, out int value);
+                    sum = value - day;
+                }
+            }
+            //1월일 때
+            else
+            {
+                sum += day;
             }
 
             return sum;

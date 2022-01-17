@@ -73,7 +73,13 @@ namespace StudyChapter2
             //elapsedMs = watch.ElapsedMilliseconds;
             //Console.WriteLine($"Recurion Binary Search Elapsed Ms: {elapsedMs}");
 
-            Study.TestCalculateAge(new DateTime(1992, 1, 27), DateTime.Today);
+            Study.TestCalculateAge(new DateTime(1992, 1, 27), DateTime.Today); //10949, 10948
+
+            Study.TestCalculateAge(new DateTime(1992, 1, 27), new DateTime(2020, 1, 15)); //10216, 10215
+            Study.TestCalculateAge(new DateTime(1992, 1, 27), new DateTime(2020, 3, 15)); //10508, 10275
+
+            Study.TestCalculateAge(new DateTime(1992, 4, 27), new DateTime(2020, 1, 15)); //10126, 10124
+            Study.TestCalculateAge(new DateTime(1992, 4, 27), new DateTime(2020, 3, 15)); //10418, 10184
         }
 
         private static void ExampleStaticMethod(int[][] array)
