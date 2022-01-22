@@ -55,8 +55,6 @@ namespace StudyChapter2
 
         public static void CalculateAge(int year, int month, int day)
         {
-            //1992-4-27
-            //2022-1-13
             var today = DateTime.Today;
             CalculateAge(new DateTime(year, month, day), today);
         }
