@@ -84,8 +84,7 @@ namespace StudyChapter2
             _days.TryGetValue(fMonth, out var value);
             sum += value - fDay;
 
-            //from년의 다음 달 ~ 12월 31일 일자 계산
-            if (fMonth + 1 == 13)
+            if (fMonth + 1 > 12)
             {
                 fMonth = 0;
                 fYear++;
@@ -105,10 +104,11 @@ namespace StudyChapter2
 
             //from 년도의 월, 일은 이미 계산함. year에 +1 해 줌
             //(from + 1) 년도 ~ (to - 1)년도의 차이는 구해서 *365 값을 sum에 더해줌
-            if (fYear + 1 != tYear)
+
+            if (fYear + 1 < tYear)
             {
-                var cYear = tYear - (fYear + 1);
-                sum += (cYear * allDays);
+                var yearSpan = tYear - fYear;
+                sum += (yearSpan * allDays);
 
                 var leadYearCount = 0;
 
@@ -117,7 +117,6 @@ namespace StudyChapter2
                 {
                     if (IsLeapYear(i))
                     {
-                        //Console.WriteLine($"{i} ");
                         leadYearCount++;
                     }
                 }
@@ -125,7 +124,7 @@ namespace StudyChapter2
                 Console.WriteLine($"윤년 개수: {leadYearCount}");
 
                 sum += leadYearCount;
-            } //O
+            }
 
             //to년도 계산
             var totalToDays = CalculatetToDays(tMonth, tDay);
