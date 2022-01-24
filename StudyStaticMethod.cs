@@ -67,13 +67,13 @@ namespace StudyChapter2
 
         public static int CalculateAge(DateTime from, DateTime to)
         {
-            var fYear = from.Year;
-            var fMonth = from.Month;
-            var fDay = from.Day;
+            var fromYear = from.Year;
+            var fromMonth = from.Month;
+            var fromDay = from.Day;
 
-            var tYear = to.Year;
-            var tMonth = to.Month;
-            var tDay = to.Day;
+            var toYear = to.Year;
+            var toMonth = to.Month;
+            var toDay = to.Day;
 
             //1년 = 365일
             const int allDays = 365;
@@ -81,39 +81,39 @@ namespace StudyChapter2
             var sum = 1;
 
             //1. from 일자(day)에서 그 달의 마지막 날까지의 경과 일자를 더함
-            _days.TryGetValue(fMonth, out var value);
-            sum += value - fDay;
+            _days.TryGetValue(fromMonth, out var value);
+            sum += value - fromDay;
 
-            if (fMonth + 1 > 12)
+            if (fromMonth == 12)
             {
-                fMonth = 0;
-                fYear++;
+                fromYear++;
             }
-
-            var totalFromDays = CalculateFromDays(fMonth + 1);
-            sum += totalFromDays; //설정한 월의 다음 월부터 12월까지의 일수
-
-            //입력한 from 년도가 윤년인지, 3월 이전인지 계산 (윤일 추가)
-            if (IsLeapYear(fYear))
+            else
             {
-                if (fMonth < 3 && fDay >= 1)
+                var totalFromDays = CalculateFromDays(fromMonth + 1);
+                sum += totalFromDays; //설정한 월의 다음 월부터 12월까지의 일수
+
+                //입력한 from 년도가 윤년인지, 3월 이전인지 계산 (윤일 추가)
+                if (fromMonth < 3)
                 {
-                    sum++;
+                    if (IsLeapYear(fromYear))
+                    {
+                        sum++;
+                    }
                 }
             }
 
             //from 년도의 월, 일은 이미 계산함. year에 +1 해 줌
             //(from + 1) 년도 ~ (to - 1)년도의 차이는 구해서 *365 값을 sum에 더해줌
-
-            if (fYear + 1 < tYear)
+            if (fromYear < toYear)
             {
-                var yearSpan = tYear - fYear;
+                var yearSpan = toYear - fromYear;
                 sum += (yearSpan * allDays);
 
                 var leadYearCount = 0;
 
                 // from + 1 ~ to - 1년에서 윤년이 있을 때마다 sum 증가
-                for (int i = fYear + 1; i < tYear; i++)
+                for (int i = fromYear; i < toYear; i++)
                 {
                     if (IsLeapYear(i))
                     {
@@ -127,12 +127,12 @@ namespace StudyChapter2
             }
 
             //to년도 계산
-            var totalToDays = CalculatetToDays(tMonth, tDay);
+            var totalToDays = CalculatetToDays(toMonth, toDay);
             sum += totalToDays;
 
-            if (IsLeapYear(tYear))
+            if (toMonth >= 3)
             {
-                if (tMonth >= 3 && tDay >= 1)
+                if (IsLeapYear(toYear))
                 {
                     sum++;
                 }
