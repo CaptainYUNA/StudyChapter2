@@ -81,6 +81,17 @@ namespace StudyChapter2
             var sum = 1;
 
             //1. from 일자(day)에서 그 달의 마지막 날까지의 경과 일자를 더함
+
+            if (fromYear == toYear)
+            {
+                if (fromMonth == toMonth)
+                {
+                    sum = sum + (toDay - fromDay);
+
+                    return sum;
+                }
+            }
+
             _days.TryGetValue(fromMonth, out var value);
             sum += value - fromDay;
 
@@ -101,12 +112,12 @@ namespace StudyChapter2
                         sum++;
                     }
                 }
+
+                fromYear++;
             }
 
-            fromYear += 1;
-
             var yearSpan = toYear - fromYear;
-            
+
             //from 년도의 월, 일은 이미 계산함. year에 +1 해 줌
             //(from + 1) 년도 ~ (to - 1)년도의 차이는 구해서 *365 값을 sum에 더해줌
             if (yearSpan == 0)
