@@ -75,61 +75,86 @@ namespace StudyChapter2
             var toMonth = to.Month;
             var toDay = to.Day;
 
-            //1년 = 365일
             const int allDays = 365;
 
-            var sum = 1;
+            var sum = 0;
 
-            //1. from 일자(day)에서 그 달의 마지막 날까지의 경과 일자를 더함
-
+            //from
             if (fromYear == toYear)
             {
                 if (fromMonth == toMonth)
                 {
-                    sum = sum + (toDay - fromDay);
+                    sum += (toDay - fromDay);
 
                     return sum;
                 }
+                else
+                {
+                    _days.TryGetValue(fromMonth, out var value);
+                    sum += value - fromDay;
+
+                    var leapDays = LeapYearCount(fromYear, fromMonth);
+                    sum += leapDays;
+
+                    fromMonth++;
+
+                    if (fromMonth == 12)
+                    {
+                        return sum + toDay;
+                    }
+
+                    fromYear++;
+                }
+            }
+            else //년도가 다른 case --> fromDay를 더해주고 fromMonth + 1부터 그 해의 12월까지 계산해야 함
+            {
+                _days.TryGetValue(fromMonth, out var value);
+                sum += value - fromDay;
+
+                var leapDays = LeapYearCount(fromYear, fromMonth);
+                sum += leapDays;
+
+                fromMonth++;
+
+                if (fromMonth == 12)
+                {
+                    _days.TryGetValue(fromMonth, out var day);
+                    sum += day;
+                }
+                else
+                {
+                    var totalFromDays = CalculateFromDays(fromMonth);
+                    sum += totalFromDays;
+                }
+
+                fromYear++;
             }
 
-            _days.TryGetValue(fromMonth, out var value);
-            sum += value - fromDay;
+            //to
+            var yearSpan = toYear - fromYear; //yearSpan이 음수가 되는 경우는 없음 (0은 됨)
 
-            if (fromMonth == 12)
+            if (yearSpan == 0)
             {
-                fromYear++;
+                var totalToDays = CalculatetToDays(toMonth);
+
+                return sum += totalToDays - toDay;
             }
             else
             {
-                var totalFromDays = CalculateFromDays(fromMonth + 1);
-                sum += totalFromDays; //설정한 월의 다음 월부터 12월까지의 일수
+                sum += yearSpan * allDays;
 
-                //입력한 from 년도가 윤년인지, 3월 이전인지 계산 (윤일 추가)
-                if (fromMonth < 3)
+                var totalToDays = CalculatetToDays(toMonth);
+                sum += totalToDays - toDay;
+
+                if (toMonth >= 3)
                 {
-                    if (IsLeapYear(fromYear))
+                    if (IsLeapYear(toYear))
                     {
                         sum++;
                     }
                 }
-
-                fromYear++;
             }
 
-            var yearSpan = toYear - fromYear;
-
-            //from 년도의 월, 일은 이미 계산함. year에 +1 해 줌
-            //(from + 1) 년도 ~ (to - 1)년도의 차이는 구해서 *365 값을 sum에 더해줌
-            if (yearSpan == 0)
-            {
-                var days = CalculatetToDays(toMonth, toDay);
-
-                return sum + days;
-            }
-
-            sum += (yearSpan * allDays);
-
-            // from + 1 ~ to - 1년에서 윤년이 있을 때마다 sum 증가
             for (int i = fromYear; i < toYear; i++)
             {
                 if (IsLeapYear(i))
@@ -138,56 +163,40 @@ namespace StudyChapter2
                 }
             }
 
-            //to년도 계산
-            var totalToDays = CalculatetToDays(toMonth, toDay);
-            sum += totalToDays;
+            return sum;
+        }
 
-            if (toMonth >= 3)
+        private static int LeapYearCount(int fromYear, int fromMonth)
+        {
+            var sum = 0;
+
+            if (fromMonth < 3)
             {
-                if (IsLeapYear(toYear))
+                if (IsLeapYear(fromYear))
                 {
                     sum++;
                 }
             }
 
-            Console.WriteLine($"계산 값: {sum} 일");
-
             return sum;
         }
 
-        private static int CalculatetToDays(int month, int day)
+        private static int CalculatetToDays(int month)
         {
             var sum = 0;
 
-            sum += day;
-            month--;
-
-            if (month > 1)
+            for (int i = 1; i <= month; i++)
             {
-                for (int i = month; i >= 1; i--)
-                {
-                    _days.TryGetValue(i, out int value);
-                    sum += value;
-                }
-            }
+                var day = month - (month - i);
+                _days.TryGetValue(day, out int value);
 
-            return sum;
-        }
-
-        private static int CalculateFromDays(int month)
-        {
-            var sum = 0;
-
-            for (int i = month; i <= 12; i++)
-            {
-                _days.TryGetValue(i, out int value);
                 sum += value;
             }
 
             return sum;
         }
 
-        private static int CalculateDays(int month, int day)
+        private static int CalculateFromDays(int month)
         {
             var sum = 0;
 

@@ -83,6 +83,9 @@ namespace StudyChapter2
 
             Study.TestCalculateAge(new DateTime(1992, 12, 27), new DateTime(2020, 3, 15));
             Study.TestCalculateAge(new DateTime(1992, 12, 27), new DateTime(2020, 1, 15));
+
+            Study.TestCalculateAge(new DateTime(2020, 12, 3), new DateTime(2020, 12, 15));
+            Study.TestCalculateAge(new DateTime(2019, 12, 3), new DateTime(2020, 12, 15));
         }
 
         private static void ExampleStaticMethod(int[][] array)
