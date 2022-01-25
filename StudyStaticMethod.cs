@@ -103,27 +103,28 @@ namespace StudyChapter2
                 }
             }
 
+            fromYear += 1;
+
+            var yearSpan = toYear - fromYear;
+            
             //from 년도의 월, 일은 이미 계산함. year에 +1 해 줌
             //(from + 1) 년도 ~ (to - 1)년도의 차이는 구해서 *365 값을 sum에 더해줌
-            if (fromYear < toYear)
+            if (yearSpan == 0)
             {
-                var yearSpan = toYear - fromYear;
-                sum += (yearSpan * allDays);
+                var days = CalculatetToDays(toMonth, toDay);
 
-                var leadYearCount = 0;
+                return sum + days;
+            }
 
-                // from + 1 ~ to - 1년에서 윤년이 있을 때마다 sum 증가
-                for (int i = fromYear; i < toYear; i++)
+            sum += (yearSpan * allDays);
+
+            // from + 1 ~ to - 1년에서 윤년이 있을 때마다 sum 증가
+            for (int i = fromYear; i < toYear; i++)
+            {
+                if (IsLeapYear(i))
                 {
-                    if (IsLeapYear(i))
-                    {
-                        leadYearCount++;
-                    }
+                    sum++;
                 }
-
-                Console.WriteLine($"윤년 개수: {leadYearCount}");
-
-                sum += leadYearCount;
             }
 
             //to년도 계산
@@ -143,16 +144,16 @@ namespace StudyChapter2
             return sum;
         }
 
-        private static int CalculatetToDays(int tMonth, int tDay)
+        private static int CalculatetToDays(int month, int day)
         {
             var sum = 0;
 
-            sum += tDay;
-            tMonth--;
+            sum += day;
+            month--;
 
-            if (tMonth > 1)
+            if (month > 1)
             {
-                for (int i = tMonth; i >= 1; i--)
+                for (int i = month; i >= 1; i--)
                 {
                     _days.TryGetValue(i, out int value);
                     sum += value;
@@ -163,6 +164,19 @@ namespace StudyChapter2
         }
 
         private static int CalculateFromDays(int month)
+        {
+            var sum = 0;
+
+            for (int i = month; i <= 12; i++)
+            {
+                _days.TryGetValue(i, out int value);
+                sum += value;
+            }
+
+            return sum;
+        }
+
+        private static int CalculateDays(int month, int day)
         {
             var sum = 0;
 
