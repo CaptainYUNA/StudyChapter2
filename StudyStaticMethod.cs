@@ -62,10 +62,38 @@ namespace StudyChapter2
         [TestMethod]
         public static void TestCalculateAge(DateTime from, DateTime to)
         {
-            Console.WriteLine($"CalculateAge: {CalculateAge(from, to)}, TimeSpan.TotalDays: {(to - from).TotalDays}");
+            Console.WriteLine($"CalculateAge: {CalculateAge(from, to)}, TimeSpan.TotalDays: {(to - from).TotalDays + 1}");
         }
 
         public static int CalculateAge(DateTime from, DateTime to)
+        {
+            var fromYear = from.Year;
+            var fromMonth = from.Month;
+            var fromDay = from.Day;
+
+            var toYear = to.Year;
+            var toMonth = to.Month;
+            var toDay = to.Day;
+
+            const int allDays = 365;
+
+            var sum = 1;
+
+            //from
+            var fromDays = CalculateFromDays(fromMonth);
+
+            sum += allDays - fromDays;
+
+            if (fromMonth < 3)
+            {
+            }
+
+            return sum;
+        }
+
+
+
+        public static int CalculateAge2(DateTime from, DateTime to)
         {
             var fromYear = from.Year;
             var fromMonth = from.Month;
@@ -170,6 +198,7 @@ namespace StudyChapter2
 
             return sum;
         }
+
 
         private static int LeapYearCount(int fromYear, int fromMonth)
         {
