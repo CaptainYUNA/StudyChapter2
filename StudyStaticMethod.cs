@@ -62,10 +62,38 @@ namespace StudyChapter2
         [TestMethod]
         public static void TestCalculateAge(DateTime from, DateTime to)
         {
-            Console.WriteLine($"CalculateAge: {CalculateAge(from, to)}, TimeSpan.TotalDays: {(to - from).TotalDays}");
+            Console.WriteLine($"CalculateAge: {CalculateAge(from, to)}, TimeSpan.TotalDays: {(to - from).TotalDays + 1}");
         }
 
         public static int CalculateAge(DateTime from, DateTime to)
+        {
+            var fromYear = from.Year;
+            var fromMonth = from.Month;
+            var fromDay = from.Day;
+
+            var toYear = to.Year;
+            var toMonth = to.Month;
+            var toDay = to.Day;
+
+            const int allDays = 365;
+
+            var sum = 1;
+
+            //from
+            var fromDays = CalculateFromDays(fromMonth);
+
+            sum += allDays - fromDays;
+
+            if (fromMonth < 3)
+            {
+            }
+
+            return sum;
+        }
+
+
+
+        public static int CalculateAge2(DateTime from, DateTime to)
         {
             var fromYear = from.Year;
             var fromMonth = from.Month;
@@ -84,7 +112,7 @@ namespace StudyChapter2
             {
                 if (fromMonth == toMonth)
                 {
-                    sum += (toDay - fromDay);
+                    sum += toDay - fromDay;
 
                     return sum;
                 }
@@ -93,8 +121,13 @@ namespace StudyChapter2
                     _days.TryGetValue(fromMonth, out var value);
                     sum += value - fromDay;
 
-                    var leapDays = LeapYearCount(fromYear, fromMonth);
-                    sum += leapDays;
+                    if (fromMonth < 3)
+                    {
+                        if (IsLeapYear(fromYear))
+                        {
+                            sum++;
+                        }
+                    }
 
                     fromMonth++;
 
@@ -165,6 +198,7 @@ namespace StudyChapter2
 
             return sum;
         }
+
 
         private static int LeapYearCount(int fromYear, int fromMonth)
         {
