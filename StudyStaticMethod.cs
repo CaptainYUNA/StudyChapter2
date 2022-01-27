@@ -84,7 +84,7 @@ namespace StudyChapter2
             {
                 if (fromMonth == toMonth)
                 {
-                    sum += (toDay - fromDay);
+                    sum += toDay - fromDay;
 
                     return sum;
                 }
@@ -93,8 +93,13 @@ namespace StudyChapter2
                     _days.TryGetValue(fromMonth, out var value);
                     sum += value - fromDay;
 
-                    var leapDays = LeapYearCount(fromYear, fromMonth);
-                    sum += leapDays;
+                    if (fromMonth < 3)
+                    {
+                        if (IsLeapYear(fromYear))
+                        {
+                            sum++;
+                        }
+                    }
 
                     fromMonth++;
 
