@@ -3,7 +3,16 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <TargetFrameworkMonikerAssemblyAttributesFileClean>False</TargetFrameworkMonikerAssemblyAttributesFileClean> 
+    <TargetFrameworkMonikerAssemblyAttributesPath> $(MSBuildThisFileDirectory)/../.NETFramework,Version=v3.1.AssemblyAttributes.cs </TargetFrameworkMonikerAssemblyAttributesPath>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="CoverageTest\**" />
+    <EmbeddedResource Remove="CoverageTest\**" />
+    <None Remove="CoverageTest\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Remove="StudyMethod.cs~RF451f8d86.TMP" />

@@ -65,6 +65,7 @@ namespace StudyChapter2
             Console.WriteLine($"CalculateAge: {CalculateAge(from, to)}, TimeSpan.TotalDays: {(to - from).TotalDays + 1}");
         }
 
+        [TestMethod]
         public static int CalculateAge(DateTime from, DateTime to)
         {
             var fromYear = from.Year;
@@ -77,127 +78,182 @@ namespace StudyChapter2
 
             const int allDays = 365;
 
-            var sum = 1;
+            var total = 1;
 
-            //from
-            var fromDays = CalculateFromDays(fromMonth);
-
-            sum += allDays - fromDays;
-
-            if (fromMonth < 3)
-            {
-            }
-
-            return sum;
-        }
-
-
-
-        public static int CalculateAge2(DateTime from, DateTime to)
-        {
-            var fromYear = from.Year;
-            var fromMonth = from.Month;
-            var fromDay = from.Day;
-
-            var toYear = to.Year;
-            var toMonth = to.Month;
-            var toDay = to.Day;
-
-            const int allDays = 365;
-
-            var sum = 0;
-
-            //from
             if (fromYear == toYear)
             {
                 if (fromMonth == toMonth)
                 {
-                    sum += toDay - fromDay;
-
-                    return sum;
-                }
-                else
-                {
                     _days.TryGetValue(fromMonth, out var value);
-                    sum += value - fromDay;
-
-                    if (fromMonth < 3)
-                    {
-                        if (IsLeapYear(fromYear))
-                        {
-                            sum++;
-                        }
-                    }
-
-                    fromMonth++;
-
-                    if (fromMonth == 12)
-                    {
-                        return sum + toDay;
-                    }
-
-                    fromYear++;
-                }
-            }
-            else //년도가 다른 case --> fromDay를 더해주고 fromMonth + 1부터 그 해의 12월까지 계산해야 함
-            {
-                _days.TryGetValue(fromMonth, out var value);
-                sum += value - fromDay;
-
-                var leapDays = LeapYearCount(fromYear, fromMonth);
-                sum += leapDays;
-
-                fromMonth++;
-
-                if (fromMonth == 12)
-                {
-                    _days.TryGetValue(fromMonth, out var day);
-                    sum += day;
+                    total += (value - fromDay) - (value - toDay);
                 }
                 else
                 {
-                    var totalFromDays = CalculateFromDays(fromMonth);
-                    sum += totalFromDays;
+                    var days = CalculateDays(fromMonth);
+                    _days.TryGetValue(toMonth, out var value);
+
+                    total += (days - fromDay) - (value - toDay);
                 }
-
-                fromYear++;
-            }
-
-            //to
-            var yearSpan = toYear - fromYear; //yearSpan이 음수가 되는 경우는 없음 (0은 됨)
-
-            if (yearSpan == 0)
-            {
-                var totalToDays = CalculatetToDays(toMonth);
-
-                return sum += totalToDays - toDay;
             }
             else
             {
-                sum += yearSpan * allDays;
-
-                var totalToDays = CalculatetToDays(toMonth);
-                sum += totalToDays - toDay;
-
-                if (toMonth >= 3)
+                for (int i = fromYear; i <= toYear; i++)
                 {
-                    if (IsLeapYear(toYear))
+                    if (i == fromYear)
                     {
-                        sum++;
+                        var days = CalculateDays(fromMonth);
+
+                        total += days - fromDay;
+
+                        if (fromMonth < 3 && IsLeapYear(i))
+                        {
+                            total++;
+                        }
+                    }
+                    else if (i == toYear)
+                    {
+                        var days = CalculateDays(toMonth);
+
+                        total += (allDays - days) + toDay;
+
+                        if (toMonth >= 3 && IsLeapYear(i))
+                        {
+                            total++;
+                        }
+                    }
+                    else
+                    {
+                        total += CalculateDays(1);
+
+                        if (IsLeapYear(i))
+                        {
+                            total++;
+                        }
                     }
                 }
             }
 
-            for (int i = fromYear; i < toYear; i++)
+            return total;
+        }
+
+        private static int CalculateDays(int month)
+        {
+            var sum = 0;
+
+            for (int i = month; i <= 12; i++)
             {
-                if (IsLeapYear(i))
-                {
-                    sum++;
-                }
+                _days.TryGetValue(i, out int days);
+                sum += days;
             }
 
             return sum;
         }
+
+        //public static int CalculateAge2(DateTime from, DateTime to)
+        //{
+        //    var fromYear = from.Year;
+        //    var fromMonth = from.Month;
+        //    var fromDay = from.Day;
+
+        //    var toYear = to.Year;
+        //    var toMonth = to.Month;
+        //    var toDay = to.Day;
+
+        //    const int allDays = 365;
+
+        //    var sum = 0;
+
+        //    //from
+        //    if (fromYear == toYear)
+        //    {
+        //        if (fromMonth == toMonth)
+        //        {
+        //            sum += toDay - fromDay;
+
+        //            return sum;
+        //        }
+        //        else
+        //        {
+        //            _days.TryGetValue(fromMonth, out var value);
+        //            sum += value - fromDay;
+
+        //            if (fromMonth < 3)
+        //            {
+        //                if (IsLeapYear(fromYear))
+        //                {
+        //                    sum++;
+        //                }
+        //            }
+
+        //            fromMonth++;
+
+        //            if (fromMonth == 12)
+        //            {
+        //                return sum + toDay;
+        //            }
+
+        //            fromYear++;
+        //        }
+        //    }
+        //    else //년도가 다른 case --> fromDay를 더해주고 fromMonth + 1부터 그 해의 12월까지 계산해야 함
+        //    {
+        //        _days.TryGetValue(fromMonth, out var value);
+        //        sum += value - fromDay;
+
+        //        var leapDays = LeapYearCount(fromYear, fromMonth);
+        //        sum += leapDays;
+
+        //        fromMonth++;
+
+        //        if (fromMonth == 12)
+        //        {
+        //            _days.TryGetValue(fromMonth, out var day);
+        //            sum += day;
+        //        }
+        //        else
+        //        {
+        //            var totalFromDays = CalculateFromDays(fromMonth);
+        //            sum += totalFromDays;
+        //        }
+
+        //        fromYear++;
+        //    }
+
+        //    //to
+        //    var yearSpan = toYear - fromYear; //yearSpan이 음수가 되는 경우는 없음 (0은 됨)
+
+        //    if (yearSpan == 0)
+        //    {
+        //        var totalToDays = CalculatetToDays(toMonth);
+
+        //        return sum += totalToDays - toDay;
+        //    }
+        //    else
+        //    {
+        //        sum += yearSpan * allDays;
+
+        //        var totalToDays = CalculatetToDays(toMonth);
+        //        sum += totalToDays - toDay;
+
+        //        if (toMonth >= 3)
+        //        {
+        //            if (IsLeapYear(toYear))
+        //            {
+        //                sum++;
+        //            }
+        //        }
+        //    }
+
+        //    for (int i = fromYear; i < toYear; i++)
+        //    {
+        //        if (IsLeapYear(i))
+        //        {
+        //            sum++;
+        //        }
+        //    }
+
+        //    return sum;
+        //}
 
 
         private static int LeapYearCount(int fromYear, int fromMonth)
@@ -230,7 +286,7 @@ namespace StudyChapter2
             return sum;
         }
 
-        private static int CalculateFromDays(int month)
+        private static int CalculateFromDays(int month, int day)
         {
             var sum = 0;
 
@@ -239,6 +295,8 @@ namespace StudyChapter2
                 _days.TryGetValue(i, out int value);
                 sum += value;
             }
+
+            sum -= day;
 
             return sum;
         }
